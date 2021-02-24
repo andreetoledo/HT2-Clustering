@@ -158,3 +158,17 @@ ggdendrogram(dendrogram, rotate = FALSE, labels = FALSE, theme_dendro = TRUE) +
   labs(title = "Dendrograma")
 
 ```
+
+##Agrupamiento Jerárquico de Popularidad y presupuesto
+
+```{r algoritmoHierarchicalp1, echo=FALSE}
+agrupamientoJ <- hclust(dist(sum_movies, method = 'euclidean'), method = 'ward.D')
+clases_aj <- cutree(agrupamientoJ, k = 3)
+sum_movies$cluster <- clases_aj
+
+ggplot() + geom_point(aes(x = popularity, y = budget, color = cluster), data = sum_movies, size = 2) +
+  scale_colour_gradientn(colours=rainbow(4)) +
+  ggtitle('Clusters de Datos con k = 3 / Agrupamiento Jerárquico') + 
+  xlab('Popularity') + ylab('Budget')
+```
+
