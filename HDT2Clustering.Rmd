@@ -150,4 +150,11 @@ Según los valores obtenidos, el que cuenta con la mayor silueta es el cluster j
 #fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
 #fviz_cluster(hc.cut, ellipse.type = "convex")
 ```
+#Se aplico el agrupamiento Jerárquico, denograma sin recorte de filas.
+```{r algoritmoHierarchical, echo=FALSE}
+library(ggdendro)
+dendrogram <- hclust(dist(sum_movies, method = 'euclidean'), method = 'ward.D')
+ggdendrogram(dendrogram, rotate = FALSE, labels = FALSE, theme_dendro = TRUE) + 
+  labs(title = "Dendrograma")
 
+```
