@@ -12,8 +12,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 knitr::opts_knit$set(root.dir="C:/Users/Ingebor Rubio/Desktop/Trabajos/Quinto Semestre/Mineria/HDT1")
 
-install.packages("ppclust")
-library(ppclust)
 library(cluster) #Para calcular la silueta
 library(e1071)#para cmeans
 library(mclust) #mixtures of gaussians
@@ -94,11 +92,6 @@ Este diagrama es más complicado de interpretar, ya que cuenta con 10866 objetos
 fcm<-cmeans(datos[,1:6],3)
 datos$FCGrupos<-fcm$cluster
 datos<-cbind(datos,fcm$membership)
-res.fcm <- fcm(datos, centers=3)
-res.fcm3 <- ppclust2(res.fcm,"fanny")
-cluster::clusplot(scale(datsos), res.fcm3$cluster, main = "Fuzzy C-means para datos sobre películas",
-                  color = TRUE, labels = 2, lines = 2, cex= 1)
-
 ```
 
 ## Mixture of gaussians
@@ -144,10 +137,5 @@ mean(silmg[,3])
 
 Según los valores obtenidos, el que cuenta con la mayor silueta es el cluster jerárquico con un valor de 0.912, por esta razón, se utilizará este método de agrupamiento para explorar e interpretar los grupos.
 
-## Visualizar el cluster jerárquico
-```{r visJer, echo=FALSE}
-#hc.cut<-hcut(datos[,1:6], k=3, hc_method = "complete")
-#fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
-#fviz_cluster(hc.cut, ellipse.type = "convex")
-```
+
 
