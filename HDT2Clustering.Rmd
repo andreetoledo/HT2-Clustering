@@ -10,8 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 #"C:/Users/andre/OneDrive/Documentos/HT1.Analisis-Exploratorio"
 #Ingebor Rubio/Desktop/Trabajos/Quinto Semestre/Mineria/HDT1
 
-knitr::opts_knit$set(root.dir="C:/Users/andre/OneDrive/Documentos/HT1.Analisis-Exploratorio")
+knitr::opts_knit$set(root.dir="C:/Users/Ingebor Rubio/Desktop/Trabajos/Quinto Semestre/Mineria/HDT1")
 
+install.packages("ppclust")
+library(ppclust)
 library(cluster) #Para calcular la silueta
 library(e1071)#para cmeans
 library(mclust) #mixtures of gaussians
@@ -67,10 +69,12 @@ datos$grupo<-km$cluster
 plotcluster(datos[,1:6],km$cluster)
 
 ```
+Se puede observar cómo es que se han dividido los tres grupos, siendo el primero el de color negro, el segundo el de color rojo y el tercero el de color verde. Al momento de cambiar de un grupo a otro, puede haber una ligera confusión ya que algunos objetos de un grupo, se encuentran en otro.
 
 ## Agrupamiento por medio de clustering jerárquico
 ```{r jerarquico, echo=FALSE}
 hc<-hclust(dist(datos[,1:6])) #Genera el clustering jerárquico de los datos
+hc
 plot(hc) #Genera el dendograma
 rect.hclust(hc,k=3) #Dibuja el corte de los grupos en el gráfico
 groups<-cutree(hc,k=3) #corta el dendograma, determinando el grupo de cada fila
@@ -82,12 +86,18 @@ g2HC<-datos[datos$gruposHC==2,]
 g3HC<-datos[datos$gruposHC==3,]
 
 ```
+Este diagrama es más complicado de interpretar, ya que cuenta con 10866 objetos, razón por la cual no se logra observar el último grupo en el que se ha dividido.
+
 
 ## Fuzzy C-means
 ```{r fuzzy}
 fcm<-cmeans(datos[,1:6],3)
 datos$FCGrupos<-fcm$cluster
 datos<-cbind(datos,fcm$membership)
+res.fcm <- fcm(datos, centers=3)
+res.fcm3 <- ppclust2(res.fcm,"fanny")
+cluster::clusplot(scale(datsos), res.fcm3$cluster, main = "Fuzzy C-means para datos sobre películas",
+                  color = TRUE, labels = 2, lines = 2, cex= 1)
 
 ```
 
@@ -100,6 +110,8 @@ g1MC<-datos[datos$mxGau==1,]
 g2MC<-datos[datos$mxGau==2,]
 g3MC<-datos[datos$mxGau==3,]
 ```
+Es este gráfico puede observarse cómo es que para cada combinación de variables cuál es la combinación de los grupos
+
 
 ### Comparación de resultados de agrupamientos  
 Insertar comparación acá
@@ -134,8 +146,8 @@ Según los valores obtenidos, el que cuenta con la mayor silueta es el cluster j
 
 ## Visualizar el cluster jerárquico
 ```{r visJer, echo=FALSE}
-hc.cut<-hcut(datos[,1:6], k=3, hc_method = "complete")
-fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
-fviz_cluster(hc.cut, ellipse.type = "convex")
+#hc.cut<-hcut(datos[,1:6], k=3, hc_method = "complete")
+#fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
+#fviz_cluster(hc.cut, ellipse.type = "convex")
 ```
 
