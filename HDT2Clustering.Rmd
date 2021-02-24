@@ -41,15 +41,101 @@ En primer lugar, es necesario hacer un complete cases para ignorar aquellos caso
 
 ```{r preprocesamiento, echo=FALSE}
 datosCompletos<- sum_movies[complete.cases(sum_movies),]
+datos <- datosCompletos[,c(3,4,5,13,17,19)]
 ```
 
 Se trabajará con las siguientes variables que tienen formato int para formas grupos: Popularity, budget, revenue, runtime, vote_count, release_year. Esto debido a que son variables que se pueden clasificar por grupos y los resultados pueden ser interpretados.
 
 Para saber la mejor cantidad de clusters a utilizar, se hará lo siguiente:
 ```{r cantClusters, echo=FALSE}
-datos <- sum_movies[,c(3,4,5,13,17,19)]
-nb <- NbClust(datos[,1], distance = "euclidean", min.nc = 2,
-             max.nc = 10, method = "complete", index ="all")
+wss <- (nrow(datos[,1:6])-1)*sum(apply(datos[,1:6],2,var))
 
+for (i in 2:10) 
+  wss[i] <- sum(kmeans(datos[,1:6], centers=i)$withinss)
+
+plot(1:10, wss, type="b", xlab="Number of Clusters",  ylab="Within groups sum of squares")
+
+```
+
+Puede observarse en el gráfico que el codo se encuentra en el valor 3, por lo que esta es la cantidad adecuada de clusters que se deben utilizar.
+
+## Agrupamiento por medio de k-means  
+```{r kmeans, echo=FALSE}
+km<-kmeans(datos[,1:6],3,iter.max =100)
+datos$grupo<-km$cluster
+
+plotcluster(datos[,1:6],km$cluster)
+
+```
+
+## Agrupamiento por medio de clustering jerárquico
+```{r jerarquico, echo=FALSE}
+hc<-hclust(dist(datos[,1:6])) #Genera el clustering jerárquico de los datos
+plot(hc) #Genera el dendograma
+rect.hclust(hc,k=3) #Dibuja el corte de los grupos en el gráfico
+groups<-cutree(hc,k=3) #corta el dendograma, determinando el grupo de cada fila
+datos$gruposHC<-groups
+
+
+g1HC<-datos[datos$gruposHC==1,]
+g2HC<-datos[datos$gruposHC==2,]
+g3HC<-datos[datos$gruposHC==3,]
+
+```
+
+## Fuzzy C-means
+```{r fuzzy}
+fcm<-cmeans(datos[,1:6],3)
+datos$FCGrupos<-fcm$cluster
+datos<-cbind(datos,fcm$membership)
+
+```
+
+## Mixture of gaussians
+```{r gaussians, echo = FALSE}
+mc<-Mclust(datos[,1:6],3)
+plot(mc, what = "classification", main="MClust Classification")
+datos$mxGau<-mc$classification
+g1MC<-datos[datos$mxGau==1,]
+g2MC<-datos[datos$mxGau==2,]
+g3MC<-datos[datos$mxGau==3,]
+```
+
+### Comparación de resultados de agrupamientos  
+Insertar comparación acá
+
+## Calidad del agrupamiento
+### K-means
+```{r calk, echo=FALSE}
+silkm<-silhouette(km$cluster,dist(datos[,1:6]))
+mean(silkm[,3])
+```
+
+### Cluster jerárquico
+```{r caljer, echo=FALSE}
+silch<-silhouette(groups,dist(datos[,1:6]))
+mean(silch[,3])
+
+```
+
+### Fuzzy C-means
+```{r calfuzzy, echo=FALSE}
+silfcm<-silhouette(fcm$cluster,dist(datos[,1:6]))
+mean(silfcm[,3])
+```
+
+### Mixture of gaussians
+```{r calGau, echo=FALSE}
+silmg<-silhouette(mc$classification,dist(datos[,1:6]))
+mean(silmg[,3])
+```
+
+Según los valores obtenidos, el que cuenta con la mayor silueta es el cluster jerárquico con un valor de 0.912, por esta razón, se utilizará este método de agrupamiento para explorar e interpretar los grupos.
+
+## Visualizar el cluster jerárquico
+```{r visJer, echo=FALSE}
+hc.cut<-hcut(datos[,1:6], k=3, hc_method = "complete")
+fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
+fviz_cluster(hc.cut, ellipse.type = "convex")
 ```
 
