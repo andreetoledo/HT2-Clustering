@@ -12,6 +12,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 knitr::opts_knit$set(root.dir="C:/Users/Ingebor Rubio/Desktop/Trabajos/Quinto Semestre/Mineria/HDT1")
 
+library(cluster) #Para calcular la silueta
+library(e1071)#para cmeans
+library(mclust) #mixtures of gaussians
+library(fpc) #para hacer el plotcluster
+library(NbClust) #Para determinar el n?mero de clusters ?ptimo
+library(factoextra) #Para hacer gr?ficos bonitos de clustering
+
 ```
 
 # Clustering sobre base de datos de películas  
@@ -28,3 +35,21 @@ En el siguiente cuadro se muestra el tipo de dato de cada variable:
 ```{r data, echo=FALSE}
 str(sum_movies)
 ```
+
+### Preprocesamiento de datos  
+En primer lugar, es necesario hacer un complete cases para ignorar aquellos casos en los que las variables se encuentren como N/A.
+
+```{r preprocesamiento, echo=FALSE}
+datosCompletos<- sum_movies[complete.cases(sum_movies),]
+```
+
+Se trabajará con las siguientes variables que tienen formato int para formas grupos: Popularity, budget, revenue, runtime, vote_count, release_year. Esto debido a que son variables que se pueden clasificar por grupos y los resultados pueden ser interpretados.
+
+Para saber la mejor cantidad de clusters a utilizar, se hará lo siguiente:
+```{r cantClusters, echo=FALSE}
+datos <- sum_movies[,c(3,4,5,13,17,19)]
+nb <- NbClust(datos[,1], distance = "euclidean", min.nc = 2,
+             max.nc = 10, method = "complete", index ="all")
+
+```
+
