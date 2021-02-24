@@ -1,0 +1,30 @@
+---
+title: "Clustering, HDT2"
+author: "Ayleen Rubio 19003, Andrés Say 19705. Andreé Toledo 18439"
+date: "23/02/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#"C:\Users\andre\OneDrive\Documentos\HT1.Analisis-Exploratorio"
+#Ingebor Rubio/Desktop/Trabajos/Quinto Semestre/Mineria/HDT1
+
+knitr::opts_knit$set(root.dir="C:/Users/Ingebor Rubio/Desktop/Trabajos/Quinto Semestre/Mineria/HDT1")
+
+```
+
+# Clustering sobre base de datos de películas  
+## Análisis exploratorio de los datos
+En este informe usted podrá leer los hallazgos de EDA, a continuación se muestra el resumen de los datos:
+
+```{r movies, echo=FALSE}
+sum_movies <- read.csv("tmdb-movies.csv")
+summary(sum_movies)
+```
+
+En el siguiente cuadro se muestra el tipo de dato de cada variable:
+
+```{r data, echo=FALSE}
+str(sum_movies)
+```
