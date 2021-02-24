@@ -2,7 +2,7 @@
 title: "Clustering, HDT2"
 author: "Ayleen Rubio 19003, Andrés Say 19705. Andreé Toledo 18439"
 date: "23/02/2021"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #"C:/Users/andre/OneDrive/Documentos/HT1.Analisis-Exploratorio"
 #Ingebor Rubio/Desktop/Trabajos/Quinto Semestre/Mineria/HDT1
 
-knitr::opts_knit$set(root.dir="C:/Users/andre/OneDrive/Documentos/HT1.Analisis-Exploratorio")
+knitr::opts_knit$set(root.dir="C:/Users/Ingebor Rubio/Desktop/Trabajos/Quinto Semestre/Mineria/HDT1")
 
 library(cluster) #Para calcular la silueta
 library(e1071)#para cmeans
@@ -153,7 +153,7 @@ ggdendrogram(dendrogram, rotate = FALSE, labels = FALSE, theme_dendro = TRUE) +
 
 ```
 
-##Agrupamiento Jerárquico de Popularidad y presupuesto
+## Ejemplo de agrupamiento Jerárquico de Popularidad y presupuesto
 
 ```{r algoritmoHierarchicalp1, echo=FALSE}
 agrupamientoJ <- hclust(dist(sum_movies, method = 'euclidean'), method = 'ward.D')
@@ -166,4 +166,29 @@ ggplot() + geom_point(aes(x = popularity, y = budget, color = cluster), data = s
   xlab('Popularity') + ylab('Budget')
 ```
 
+Los grupos generados son los siguientes: 
+```{r grupos, echo=FALSE}
+g1HC
+g2HC
+g3HC
+```
 
+### Medidas de tenencia central de Grupo 1
+```{r grupo1, echo=FALSE}
+summary(g1HC)
+```
+
+### Medidas de tenencia central de Grupo 2
+```{r grupo2, echo=FALSE}
+summary(g2HC)
+```
+
+### Medidas de tenencia central de Grupo 3
+```{r grupo3, echo=FALSE}
+summary(g3HC)
+```
+
+En el caso del presupuesto, hemos observado que se han ordenado de mayor a menor según el siguiente orden: grupo 3, grupo 2 y grupo 1. En cuanto a los valores mínimos, en el grupo 2 se han agrupado los que contaban con este valor en 0 y en el grupo 3 se han agrupado los que cuentan con el mínimo más alto. 
+En general, en el grupo 2 se han agrupado los valores más bajos, luego en el grupo 3 se han agrupado los más altos y en grupo 1 se han agrupado los valores restantes. 
+
+A partir de este trabajo se podría identificar qué objetos son miembros de cada grupo para poder investigar las películas que han tenido valores altos tanto en popularidad, presupuesto y ganancias, por ejemplo, de la misma manera se podría identificar a los que cuentan con los valores más bajos.
