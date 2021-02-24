@@ -135,7 +135,35 @@ silmg<-silhouette(mc$classification,dist(datos[,1:6]))
 mean(silmg[,3])
 ```
 
+
 Según los valores obtenidos, el que cuenta con la mayor silueta es el cluster jerárquico con un valor de 0.912, por esta razón, se utilizará este método de agrupamiento para explorar e interpretar los grupos.
 
+## Visualizar el cluster jerárquico
+```{r visJer, echo=FALSE}
+#hc.cut<-hcut(datos[,1:6], k=3, hc_method = "complete")
+#fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
+#fviz_cluster(hc.cut, ellipse.type = "convex")
+```
+#Se aplico el agrupamiento Jerárquico, denograma sin recorte de filas.
+```{r algoritmoHierarchical, echo=FALSE}
+library(ggdendro)
+dendrogram <- hclust(dist(sum_movies, method = 'euclidean'), method = 'ward.D')
+ggdendrogram(dendrogram, rotate = FALSE, labels = FALSE, theme_dendro = TRUE) + 
+  labs(title = "Dendrograma")
+
+```
+
+##Agrupamiento Jerárquico de Popularidad y presupuesto
+
+```{r algoritmoHierarchicalp1, echo=FALSE}
+agrupamientoJ <- hclust(dist(sum_movies, method = 'euclidean'), method = 'ward.D')
+clases_aj <- cutree(agrupamientoJ, k = 3)
+sum_movies$cluster <- clases_aj
+
+ggplot() + geom_point(aes(x = popularity, y = budget, color = cluster), data = sum_movies, size = 2) +
+  scale_colour_gradientn(colours=rainbow(4)) +
+  ggtitle('Clusters de Datos con k = 3 / Agrupamiento Jerárquico') + 
+  xlab('Popularity') + ylab('Budget')
+```
 
 
