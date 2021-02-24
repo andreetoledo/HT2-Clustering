@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #"C:/Users/andre/OneDrive/Documentos/HT1.Analisis-Exploratorio"
 #Ingebor Rubio/Desktop/Trabajos/Quinto Semestre/Mineria/HDT1
 
-knitr::opts_knit$set(root.dir="C:/Users/Ingebor Rubio/Desktop/Trabajos/Quinto Semestre/Mineria/HDT1")
+knitr::opts_knit$set(root.dir="C:/Users/Andree/Documents/GitHub/HT1.Analisis-Exploratorio")
 
 install.packages("ppclust")
 library(ppclust)
